@@ -1,0 +1,33 @@
+---
+description: Security patterns for auth, secrets, rate limiting, and input/output safety
+alwaysApply: true
+---
+
+# Security
+
+## Secrets
+
+- Read secrets from `process.env` only; never hardcode or log them.
+- `httpLogger` redacts `password`/`token` - keep any new sensitive fields redacted too.
+- Never commit `.env`; only `.env.example` is tracked.
+
+## Auth
+
+- Protect routes with the `auth` middleware ([server/src/middleware/auth.js](server/src/middleware/auth.js)).
+- JWTs are signed/verified with `process.env.JWT_SECRET`; read the identity from `req.user`.
+
+## Passwords
+
+- Hash passwords with `bcryptjs` in a model pre-save hook.
+- Strip `password` in the model `toJSON`; never return it in a response.
+
+## Rate Limiting
+
+Reuse the scoped limiters in [server/src/middleware/rateLimiter.js](server/src/middleware/rateLimiter.js):
+`loginLimiter`, `commentLimiter`, `generateLimiter`, `apiLimiter`. Attach sensitive or expensive endpoints to an appropriate limiter.
+
+## Input / Output Safety
+
+- Keep `helmet` and `cors` enabled; the CORS origin is allowlisted via `CLIENT_URL`.
+- Validate request input in `src/validators/`.
+- On the client, sanitize any user- or AI-generated HTML with `dompurify` before rendering (e.g. blog content/markdown).

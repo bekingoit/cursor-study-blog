@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
+import downloadSeedImages from './download-seed-images.js'
 import 'dotenv/config'
 import User from '../src/models/User.js'
 import Blog from '../src/models/Blog.js'
@@ -70,7 +71,9 @@ const clearUploadedImages = () => {
 const seedDatabase = async () => {
   try {
     console.log('🌱 Starting database seed...\n')
-    
+
+    await downloadSeedImages()
+
     // Ensure uploads directory exists
     ensureUploadsDir()
     
@@ -166,8 +169,11 @@ const runSeed = async () => {
   process.exit(0)
 }
 
-// Execute if run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Execute if run directly (Windows-safe path check)
+const isDirectRun =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href
+
+if (isDirectRun) {
   runSeed()
 }
 

@@ -1,0 +1,65 @@
+---
+description: Client data fetching hooks and API layer patterns
+globs: client/src/hooks/**,client/src/api/**
+alwaysApply: false
+---
+
+# Data Fetching & API Layer
+
+## Layering
+
+Component → domain hook (`useBlogs`) → `*Api.js` (`blogApi`) → [axiosConfig](client/src/api/axiosConfig.js).
+
+Never call raw paths from components or hooks. Never import `axios` from `AppContext` for new code.
+
+## Queries (GET)
+
+Use `useApiQuery` with `enabled` and `dependencies` for parametric fetches:
+
+```js
+export function useBlog(id) {
+  const { data, loading, error, refetch } = useApiQuery(
+    () => blogApi.getById(id),
+    { enabled: !!id, dependencies: [id], errorMessage: MESSAGES.ERROR_FETCH_BLOG }
+  )
+  return { blog: data?.blog ?? null, loading, error, refetch }
+}
+```
+
+Map payload at the hook boundary: `data?.blogs ?? []`, `data?.blog ?? null`.
+
+## Mutations (POST/PUT/DELETE)
+
+Use `useApiMutation`; pass `() => blogApi.create(formData)` (not hardcoded paths).
+
+```js
+return mutate(() => blogApi.create(formData), {
+  successMessage: MESSAGES.SUCCESS_BLOG_CREATED,
+  errorMessage: MESSAGES.ERROR_CREATE_BLOG,
+  onSuccess: () => refetch?.()
+})
+```
+
+- Build `FormData` in the hook; `axiosConfig` skips JSON `Content-Type` for `FormData`.
+- Use `confirmMessage` for destructive actions.
+- Call `refetch()` from related queries in `onSuccess` when the UI should refresh.
+
+## API module
+
+Add methods to `*Api.js` using [API_ENDPOINTS](client/src/constants/apiEndpoints.js); export via [api/index.js](client/src/api/index.js).
+
+```js
+// GOOD
+getAll: async () => axios.get(API_ENDPOINTS.BLOGS_ALL)
+
+// AVOID
+axios.post('/api/blog/add', formData)
+```
+
+Register hooks in `hooks/api/queries/index.js` or `hooks/api/mutations/index.js`.
+
+## Anti-patterns
+
+- No ad-hoc `useEffect` + axios when `useApiQuery` fits (refactor `useBlog`-style hooks).
+- No `console.log` in hooks.
+- Backend envelope is always `{ success, message?, ...payload }`; check `response.data.success` in core hooks only.

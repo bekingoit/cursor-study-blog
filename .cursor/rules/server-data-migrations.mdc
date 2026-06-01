@@ -1,0 +1,34 @@
+---
+description: Mongoose models, migrations, and seeding conventions
+globs: server/src/models/**,server/migrations/**
+alwaysApply: false
+---
+
+# Models, Migrations & Seeding
+
+## Models
+
+- One Mongoose model per PascalCase file; default-export the model.
+- Always set `{ timestamps: true }`.
+- Use schema field options (`required`, `trim`, `lowercase`, `enum`, `default`).
+- Put side effects in pre-save hooks (e.g. password hashing) and instance methods on the schema.
+
+```js
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  role: { type: String, enum: ['admin', 'author'], default: 'author' },
+}, { timestamps: true })
+
+export default mongoose.model('User', userSchema)
+```
+
+## Migrations
+
+- Schema/index/collection changes go through migrate-mongo, not ad-hoc scripts.
+- Create with `npm run migrate:create`; files are named `YYYYMMDDHHMMSS-description.js`.
+- Export `up(db)` / `down(db)` using the raw MongoDB driver (`db.collection(...)`), and log via `dbLogger`.
+
+## Seeding
+
+- Seed data lives in `fixtures/`; the seeder is [server/scripts/seed.js](server/scripts/seed.js) (`npm run seed`).
+- Let model hooks run (e.g. create users via `User.create` so passwords hash); log operations with `dbLogger`.

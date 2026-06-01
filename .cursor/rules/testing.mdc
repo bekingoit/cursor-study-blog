@@ -1,0 +1,19 @@
+---
+description: Testing guidance and current quality gates
+alwaysApply: true
+---
+
+# Testing
+
+No automated test framework is configured yet. The current quality gate is
+`npm run lint` in `client/` - run it before finishing client-side changes.
+
+## When Adding Tests
+
+- Colocate tests next to the code they cover: `Feature.test.jsx`, `xController.test.js`.
+- Prioritize the highest-risk areas first:
+  - data-fetching hooks (`useApiQuery`/`useApiMutation` wrappers)
+  - controllers and validators
+  - auth logic
+- Test behavior and the `{ success, ... }` response contract, not implementation details.
+- Do not introduce a heavy framework or large test scaffolding without checking in first.

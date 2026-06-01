@@ -1,0 +1,42 @@
+---
+description: Adding server API endpoints (routes, validators, controllers)
+globs: server/src/routes/**,server/src/controllers/**,server/src/validators/**
+alwaysApply: false
+---
+
+# API Endpoint Flow
+
+To add an endpoint:
+
+1. Add the route in the relevant `*Routes.js` and attach middleware.
+2. Add a validator in `src/validators/` if input needs checking (custom middleware - no Joi/Zod).
+3. Implement the controller, exported wrapped in `asyncHandler`.
+4. Ensure the router is mounted under `/api/...` in [server/server.js](server/server.js).
+
+## Routing
+
+- Use POST for mutations (including delete/publish), matching existing routes.
+- Keep route files thin: import controllers, attach middleware, no business logic.
+- Protect a group of routes with `router.use(auth)`; read identity from `req.user` (e.g. `req.user.userId`).
+
+```js
+// blogRoutes.js
+blogRouter.get('/all', getAllBlogs)
+blogRouter.post('/add-comment', commentLimiter, validateComment, addComment)
+
+blogRouter.use(auth) // everything below requires auth
+blogRouter.post('/add', upload.single('image'), validateBlogInput, addBlog)
+```
+
+## Validators
+
+Named `validateXxx` exports that accumulate messages and return `400` on failure, else `next()`:
+
+```js
+export const validateBlogInput = (req, res, next) => {
+  const errors = []
+  if (!title || title.trim().length < 3) errors.push('Title must be at least 3 characters')
+  if (errors.length) return res.status(400).json({ success: false, message: 'Validation failed', errors })
+  next()
+}
+```
