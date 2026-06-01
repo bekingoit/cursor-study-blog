@@ -1,12 +1,10 @@
-import { useAppContext } from '../../../context/AppContext'
 import { useApiQuery } from '../../core'
+import { adminApi } from '../../../api'
 import { MESSAGES } from '../../../constants/messages'
 
 export function useAdminBlogs() {
-  const { axios } = useAppContext()
-  
   const { data, loading, error, refetch } = useApiQuery(
-    () => axios.get('/api/admin/blogs'),
+    () => adminApi.getBlogs(),
     {
       errorMessage: MESSAGES.ERROR_FETCH_BLOGS
     }
@@ -19,4 +17,3 @@ export function useAdminBlogs() {
     refetch
   }
 }
-
