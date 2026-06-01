@@ -1,0 +1,27 @@
+---
+description: Project overview, stack guardrails, and collaboration norms
+alwaysApply: true
+---
+
+# Project Overview
+
+This is a blog platform monorepo with two workspaces:
+
+- `client/` - React 19 + Vite 6 SPA (JavaScript/JSX, no TypeScript)
+- `server/` - Express 5 + Mongoose API (ESM, `"type": "module"`)
+
+## Stack Guardrails
+
+Do not introduce these unless explicitly requested:
+
+- No TypeScript (the codebase is plain JS/JSX)
+- No `@tanstack/react-query` (custom `useApiQuery`/`useApiMutation` hooks are used)
+- No Redux / Zustand (global state lives in `AppContext`)
+- No Prettier config (formatting follows existing files)
+
+## Collaboration Norms
+
+- Match the conventions of neighboring files over personal preference.
+- Run `npm run lint` in `client/` before finishing client-side changes.
+- Never commit secrets. `.env` files stay local; only `.env.example` is tracked.
+- Keep changes scoped; prefer editing existing files over adding new abstractions.

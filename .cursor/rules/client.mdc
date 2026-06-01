@@ -1,0 +1,41 @@
+---
+description: React client structure, component, and import conventions
+globs: client/**
+alwaysApply: false
+---
+
+# Client Conventions
+
+## Components
+
+- Functional components only; no class components.
+- Default-export the component from its `.jsx` file.
+- Use `.jsx` for components, pages, and context; use `.js` for hooks, API, constants, and barrels.
+
+## Folder Co-location + Barrels
+
+Each feature lives in its own folder with a barrel `index.js`:
+
+```
+Feature/
+  Feature.jsx     # component (default export)
+  Feature.css     # optional co-located styles
+  index.js        # export { default } from './Feature'
+  components/      # page-local subcomponents, same pattern
+    index.js       # export { default as Sub } from './Sub'
+```
+
+Import features through their barrel, not the inner file.
+
+## Imports
+
+Use the `@/` alias for `src/` imports (configured in [client/vite.config.js](client/vite.config.js)):
+
+```js
+// GOOD
+import { Navbar, Footer } from '@/components'
+import { ROUTES } from '@/constants/routes'
+
+// AVOID
+import Navbar from '../../../components/Navbar'
+```

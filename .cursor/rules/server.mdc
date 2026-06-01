@@ -1,0 +1,37 @@
+---
+description: Server (Express + Mongoose ESM) core conventions
+globs: server/**
+alwaysApply: false
+---
+
+# Server Conventions
+
+## Modules & Env
+
+- ESM everywhere (`"type": "module"`); use `import`/`export`, not `require`.
+- Use explicit `.js` extensions on relative imports.
+- Read config from `process.env.*`; `dotenv/config` is imported at the entry point.
+
+## Naming
+
+- Files: `*Routes.js`, `*Controller.js`, `*Validator.js`.
+- Models are PascalCase (`User.js` -> model `'User'`); schema vars are camelCase (`userSchema`).
+
+## Response Envelope
+
+All responses use a consistent shape:
+
+```js
+res.json({ success: true, ...data })        // use `count` for lists
+res.status(201).json({ success: true, message, blog })
+```
+
+## Errors
+
+- Expected errors: return early inside the controller.
+
+```js
+if (!blog) return res.status(404).json({ success: false, message: 'Not found' })
+```
+
+- Unexpected errors: let them throw. Controllers are wrapped with `asyncHandler`, which forwards to the global `errorHandler`. Avoid try/catch for the happy path.

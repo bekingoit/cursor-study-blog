@@ -1,0 +1,41 @@
+---
+description: Client data fetching hooks and API layer patterns
+globs: client/src/hooks/**,client/src/api/**
+alwaysApply: false
+---
+
+# Data Fetching & API Layer
+
+Prefer the core hooks over ad-hoc `useEffect` + axios (see [client/src/hooks/README.md](client/src/hooks/README.md)):
+
+- `useApiQuery` for GET (auto-fetch, returns `{ data, loading, error, refetch }`)
+- `useApiMutation` for POST/PUT/DELETE (toasts on success/error)
+
+## API Layer
+
+Add request methods to the relevant `*Api.js` object using `API_ENDPOINTS`, and export it from [client/src/api/index.js](client/src/api/index.js). Avoid hardcoded paths.
+
+```js
+// GOOD - in blogApi.js
+getAll: async () => axios.get(API_ENDPOINTS.BLOGS_ALL)
+
+// AVOID - hardcoded path in a hook
+axios.post('/api/blog/add', formData)
+```
+
+## Hooks
+
+The backend always returns `{ success, message?, ...payload }`. Map nested data with a fallback, and register the hook in the relevant barrel.
+
+```js
+// queries/useBlogs.js
+export function useBlogs() {
+  const { data, loading, error, refetch } = useApiQuery(
+    () => blogApi.getAll(),
+    { errorMessage: MESSAGES.ERROR_FETCH_BLOGS }
+  )
+  return { blogs: data?.blogs || [], loading, error, refetch }
+}
+```
+
+Export new query hooks from `hooks/api/queries/index.js` and mutations from `hooks/api/mutations/index.js`.

@@ -1,0 +1,26 @@
+---
+description: Client styling (Ant Design + CSS) and i18n/messages conventions
+globs: client/src/**/*.jsx,client/src/**/*.css
+alwaysApply: false
+---
+
+# Styling & i18n
+
+## Styling
+
+- Build UI with Ant Design 6 components; use `theme.useToken()` for design tokens.
+- Co-locate component styles in `Feature.css` next to `Feature.jsx`.
+- Keep shared layout numbers (spacing, sizes, pagination) in [client/src/constants/ui.js](client/src/constants/ui.js) rather than hardcoding them.
+
+## i18n & Messages
+
+- User-facing UI copy goes through `useTranslation()` with keys in [client/src/i18n/locales/en.json](client/src/i18n/locales/en.json).
+
+```jsx
+import { useTranslation } from 'react-i18next'
+const { t } = useTranslation()
+return <span>{t('blog.comments')}</span>
+```
+
+- Toast/error strings used inside API hooks come from `MESSAGES` in [client/src/constants/messages.js](client/src/constants/messages.js).
+- Add new UI strings under the appropriate nested key in `en.json`; do not hardcode visible text in components.
