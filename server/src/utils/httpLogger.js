@@ -56,6 +56,9 @@ const httpLogger = (req, res, next) => {
     const sanitizedBody = { ...req.body }
     if (sanitizedBody.password) sanitizedBody.password = '***'
     if (sanitizedBody.token) sanitizedBody.token = '***'
+    if (sanitizedBody.prompt) sanitizedBody.prompt = '[redacted]'
+    if (sanitizedBody.instruction) sanitizedBody.instruction = '[redacted]'
+    if (sanitizedBody.description) sanitizedBody.description = '[redacted]'
     
     const bodyInfo = `Body: ${JSON.stringify(sanitizedBody)}`
     console.log(`   ↳ ${bodyInfo}`)
