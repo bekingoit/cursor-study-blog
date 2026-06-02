@@ -21,6 +21,20 @@ export const blogApi = {
     })
   },
 
+  // Create blog/draft
+  create: async (formData) => {
+    return await axios.post(API_ENDPOINTS.BLOG_CREATE, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+
+  // Generate blog body with AI
+  generateBody: async (payload) => {
+    return await axios.post(API_ENDPOINTS.BLOG_GENERATE, payload)
+  },
+
   // Delete blog
   delete: async (id) => {
     return await axios.delete(API_ENDPOINTS.BLOG_DELETE(id))
