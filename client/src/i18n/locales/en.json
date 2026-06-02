@@ -11,6 +11,8 @@
     "save": "Save",
     "publish": "Publish",
     "unpublish": "Unpublish",
+    "approve": "Approve",
+    "unapprove": "Unapprove",
     "subscribe": "Subscribe",
     "clearSearch": "Clear Search"
   },
@@ -57,13 +59,24 @@
   },
   "blogDetail": {
     "shareTitle": "Share this article on social media",
-    "coverAlt": "Article cover"
+    "coverAlt": "Article cover",
+    "comments": {
+      "title": "Comments",
+      "leaveComment": "Leave a comment",
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "Your name",
+      "commentLabel": "Comment",
+      "commentPlaceholder": "Your comment",
+      "submit": "Submit",
+      "noComments": "No comments yet. Be the first to comment!"
+    }
   },
   "admin": {
     "sidebar": {
       "dashboard": "Dashboard",
       "addArticle": "Add Article",
-      "allArticles": "All Articles"
+      "allArticles": "All Articles",
+      "comments": "Comments"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -97,6 +110,21 @@
         "blogTitle": "Blog Title",
         "date": "Date",
         "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "comments": {
+      "title": "Comments",
+      "commentsCount": "Comments:",
+      "sorting": "Sorting:",
+      "sortLatest": "Latest",
+      "sortByArticle": "By Article",
+      "totalComments": "Total {{count}} comments",
+      "columns": {
+        "index": "#",
+        "comment": "Comment",
+        "article": "Article",
+        "author": "Author",
         "actions": "Actions"
       }
     }
@@ -139,7 +167,9 @@
     "nameRequired": "Please enter your name",
     "titleRequired": "Please enter article title",
     "subtitleRequired": "Please enter subtitle",
-    "categoryRequired": "Please select a category"
+    "categoryRequired": "Please select a category",
+    "usernameRequired": "Please enter your username",
+    "commentRequired": "Please enter your comment"
   },
   "messages": {
     "success": {
@@ -148,7 +178,11 @@
       "blogPublished": "Blog published successfully",
       "blogUnpublished": "Blog unpublished successfully",
       "login": "Login successful!",
-      "logout": "Logout successful!"
+      "logout": "Logout successful!",
+      "commentAdded": "Comment added for review",
+      "commentApproved": "Comment approved successfully",
+      "commentUnapproved": "Comment unapproved successfully",
+      "commentDeleted": "Comment deleted successfully"
     },
     "error": {
       "generic": "Something went wrong. Please try again.",

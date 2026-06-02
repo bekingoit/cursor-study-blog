@@ -1,0 +1,11 @@
+.comment-form {
+  width: 100%;
+}
+
+.comment-form-leave-title {
+  margin: 0;
+}
+
+.comment-form-fields .ant-form-item:last-child {
+  margin-bottom: 0;
+}

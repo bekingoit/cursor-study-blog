@@ -1,0 +1,24 @@
+.comment-list {
+  width: 100%;
+}
+
+.comment-list-loading {
+  padding: var(--ant-padding-lg);
+}
+
+.comment-list-empty {
+  margin: var(--ant-margin) 0;
+}
+
+.comment-list-item {
+  padding: var(--ant-padding) 0;
+  border-bottom: var(--ant-line-width) solid var(--ant-color-border-secondary);
+}
+
+.comment-list-item:last-child {
+  border-bottom: none;
+}
+
+.comment-list-item-text {
+  margin-bottom: 0;
+}
