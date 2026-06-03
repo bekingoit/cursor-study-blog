@@ -5,8 +5,12 @@ alwaysApply: true
 
 # Testing
 
-No automated test framework is configured yet. The current quality gate is
-`npm run lint` in `client/` - run it before finishing client-side changes.
+Client tests use Vitest + React Testing Library. Run `npm run lint` and
+`npm run test:run` in `client/` before finishing client-side changes.
+
+Git pre-commit (Husky) runs `npm run precommit` from the repo root, which
+executes client lint and `test:run`. Failed checks block the commit.
+After cloning, run `npm install` at the repo root once to install Husky.
 
 ## When Adding Tests
 
