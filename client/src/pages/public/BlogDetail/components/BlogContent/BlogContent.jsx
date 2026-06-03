@@ -1,7 +1,6 @@
 import React from 'react'
 import { Flex, theme } from 'antd'
 import DOMPurify from 'dompurify'
-import { marked } from 'marked'
 import './BlogContent.css'
 
 // Sanitize HTML content to prevent XSS attacks
@@ -18,11 +17,6 @@ const sanitizeHtml = (html) => {
 
 function BlogContent({ content }) {
   const { token } = theme.useToken()
-  const rawContent = content || ''
-  const looksLikeHtml = /<[^>]+>/.test(rawContent)
-  const renderedHtml = looksLikeHtml
-    ? rawContent
-    : marked.parse(rawContent, { gfm: true, breaks: true })
 
   return (
     <Flex
@@ -37,10 +31,11 @@ function BlogContent({ content }) {
     >
       <div
         className="rich-text"
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(renderedHtml) }}
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
       />
     </Flex>
   )
 }
 
 export default BlogContent
+
