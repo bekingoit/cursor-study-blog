@@ -1,4 +1,5 @@
 import Moment from 'moment'
+import { formatBlogContentForDisplay, isHtmlContent } from './blogContent'
 
 export const formatDate = (date) => {
   return Moment(date).format('MMMM Do YYYY')
@@ -19,7 +20,8 @@ export const stripHtmlTags = (html) => {
 }
 
 export const truncateHtml = (html, length = 80) => {
-  const stripped = stripHtmlTags(html)
+  const normalized = isHtmlContent(html) ? html : formatBlogContentForDisplay(html)
+  const stripped = stripHtmlTags(normalized)
   return truncateText(stripped, length)
 }
 

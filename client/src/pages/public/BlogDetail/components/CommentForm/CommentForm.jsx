@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Form, Input, Button, Typography, Flex, theme } from 'antd'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
+import { createCommentSchema } from '@/schemas'
 import './CommentForm.css'
 
 const { Title } = Typography
@@ -9,25 +12,31 @@ const { TextArea } = Input
 const MAX_COMMENT_LENGTH = 650
 
 function CommentForm({ onSubmit, loading = false }) {
-  const [form] = Form.useForm()
-  const [submitting, setSubmitting] = useState(false)
   const { token } = theme.useToken()
   const { t } = useTranslation()
 
-  const handleSubmit = async (values) => {
-    setSubmitting(true)
+  const schema = useMemo(() => createCommentSchema(t), [t])
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting }
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: { name: '', content: '' }
+  })
+
+  const onFormSubmit = useCallback(async (values) => {
     const result = await onSubmit({
       name: values.name,
       content: values.content
     })
 
     if (result?.success) {
-      form.resetFields()
+      reset()
     }
-
-    setSubmitting(false)
-  }
+  }, [onSubmit, reset])
 
   return (
     <Flex
@@ -37,52 +46,66 @@ function CommentForm({ onSubmit, loading = false }) {
     >
       <Title
         level={3}
-      style={{
+        style={{
           margin: 0,
           marginBottom: token.marginXS,
           fontWeight: token.fontWeightStrong,
           color: token.colorTextBase
         }}
       >
-          {t('comment.title')}
-        </Title>
+        {t('comment.title')}
+      </Title>
 
       <Form
-        form={form}
         layout="vertical"
-        onFinish={handleSubmit}
+        component="form"
+        onFinish={handleSubmit(onFormSubmit)}
         style={{ width: '100%' }}
       >
         <Form.Item
-          name="name"
-          rules={[{ required: true, message: t('validation.nameRequired') }]}
+          validateStatus={errors.name ? 'error' : ''}
+          help={errors.name?.message}
           style={{ marginBottom: token.marginSM }}
         >
-          <Input
-            placeholder={t('comment.namePlaceholder')}
-            size="large"
-            style={{
-              borderRadius: token.borderRadiusLG
-            }}
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder={t('comment.namePlaceholder')}
+                size="large"
+                style={{
+                  borderRadius: token.borderRadiusLG
+                }}
+              />
+            )}
           />
         </Form.Item>
 
         <Form.Item
-          name="content"
-          rules={[{ required: true, message: t('validation.commentRequired') }]}
+          validateStatus={errors.content ? 'error' : ''}
+          help={errors.content?.message}
           style={{ marginBottom: token.marginSM }}
         >
-          <TextArea
-            placeholder={t('comment.contentPlaceholder')}
-            rows={5}
-            size="large"
-            maxLength={MAX_COMMENT_LENGTH}
-            showCount={{
-              formatter: ({ count, maxLength }) => `${count}/${maxLength}`
-            }}
-            style={{
-              borderRadius: token.borderRadiusLG
-            }}
+          <Controller
+            name="content"
+            control={control}
+            render={({ field }) => (
+              <TextArea
+                {...field}
+                placeholder={t('comment.contentPlaceholder')}
+                rows={5}
+                size="large"
+                maxLength={MAX_COMMENT_LENGTH}
+                showCount={{
+                  formatter: ({ count, maxLength }) => `${count}/${maxLength}`
+                }}
+                style={{
+                  borderRadius: token.borderRadiusLG
+                }}
+              />
+            )}
           />
         </Form.Item>
 
@@ -90,7 +113,7 @@ function CommentForm({ onSubmit, loading = false }) {
           <Button
             type="primary"
             htmlType="submit"
-            loading={loading || submitting}
+            loading={loading || isSubmitting}
             size="large"
             style={{
               borderRadius: token.borderRadiusLG

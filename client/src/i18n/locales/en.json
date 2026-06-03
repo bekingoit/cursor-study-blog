@@ -167,10 +167,16 @@
     "confirmPasswordRequired": "Please confirm your password",
     "passwordMismatch": "Passwords do not match",
     "nameRequired": "Please enter your name",
+    "nameMin": "Name must be at least 2 characters",
     "commentRequired": "Please enter your comment",
+    "commentMin": "Comment must be at least 5 characters",
+    "commentMax": "Comment must be 650 characters or less",
     "titleRequired": "Please enter article title",
+    "titleMin": "Title must be at least 3 characters",
     "subtitleRequired": "Please enter subtitle",
-    "categoryRequired": "Please select a category"
+    "categoryRequired": "Please select a category",
+    "descriptionMin": "Description must be at least 10 characters",
+    "thumbnailRequired": "Please upload a thumbnail image"
   },
   "messages": {
     "success": {
