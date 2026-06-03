@@ -11,5 +11,11 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src')
     }
+  },
+  test: {
+    environment: 'happy-dom',
+    setupFiles: ['./src/test/setup.js'],
+    globals: true,
+    fileParallelism: false
   }
 })
